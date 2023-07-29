@@ -31,7 +31,7 @@
 
                         <div class="absolute flex gap-4 items-center justify-start bottom-0 mb-1.5">
                             <button type="button" class="p-1 rounded-full bg-white">
-                              <Play v-if="true" fillColor="#181818" :size="25" />
+                              <Play v-if="!isPlaying" fillColor="#181818" :size="25" @click="playFunc()"/>
                               <Play v-else fillColor="#181818" :size="25" />
                             </button>
                             <button type="button" >                         
@@ -59,8 +59,8 @@
             </div>
             <div class="border-b border-b-[#2A2A2A] mt-2"></div>
             <div class="mb-4"></div>
-            <ul class="w-full" v-for="track, num in artist.tracks" :key="track">
-                <SongRow :artist="artist" :track="track" :index="++num" />
+            <ul class="w-full" v-for="track, index in artist.tracks" :key="track">
+                <SongRow :artist="artist" :track="track" :index="++index" />
             </ul>
         </div>
       
@@ -75,6 +75,21 @@ import DotsHorizontal from 'vue-material-design-icons/DotsHorizontal.vue';
 import Heart from 'vue-material-design-icons/Heart.vue';
 import ClockTimeThreeOutline from 'vue-material-design-icons/ClockTimeThreeOutline.vue';
 import artist from '../artist.json'
+
+
+
+import { useSongStore } from '../stores/song'
+import { storeToRefs } from 'pinia';
+  const useSong = useSongStore()
+const { isPlaying, audio, currentArtist, currentTrack } = storeToRefs(useSong)
+
+const playFunc = () => {
+    if (currentTrack.value) {
+        useSong.playOrPauseThisSong(currentArtist.value, currentTrack.value)
+        return
+    } 
+    useSong.playFromFirst()
+}
 
 </script>
     
